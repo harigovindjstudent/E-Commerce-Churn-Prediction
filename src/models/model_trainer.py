@@ -79,5 +79,9 @@ class ModelTrainer:
     
     def _save_model(self, model):
         """Save the trained model to disk."""
-        joblib.dump(model, self.config['model']['best_model_path'])
-        logger.info(f"Model saved to {self.config['model']['best_model_path']}")
+        import os
+        model_path = self.config['model']['best_model_path']
+        # Create directory if it doesn't exist
+        os.makedirs(os.path.dirname(model_path), exist_ok=True)
+        joblib.dump(model, model_path)
+        logger.info(f"Model saved to {model_path}")

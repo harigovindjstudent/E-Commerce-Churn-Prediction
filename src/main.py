@@ -12,7 +12,7 @@ def main():
     """Main execution function."""
     try:
         # Load configuration
-        config_path = 'config/config.yaml'
+        config_path = '../config/config.yaml'
         
         # Initialize components
         data_loader = DataLoader(config_path)

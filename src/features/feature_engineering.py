@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 from sklearn.preprocessing import StandardScaler, LabelEncoder
 import logging
+import yaml
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -19,8 +20,12 @@ class FeatureEngineering:
         try:
             df_processed = df.copy()
             
+            # Automatically identify categorical and numerical features
+            categorical_features = df_processed.select_dtypes(include=['object']).columns.tolist()
+            numerical_features = df_processed.select_dtypes(include=['int64', 'float64']).columns.tolist()
+            
             # Handle categorical features
-            for feature in self.config['feature_engineering']['categorical_features']:
+            for feature in categorical_features:
                 if is_training:
                     self.label_encoders[feature] = LabelEncoder()
                     df_processed[feature] = self.label_encoders[feature].fit_transform(df_processed[feature])
@@ -28,13 +33,15 @@ class FeatureEngineering:
                     df_processed[feature] = self.label_encoders[feature].transform(df_processed[feature])
             
             # Scale numerical features
-            numerical_features = self.config['feature_engineering']['numerical_features']
-            if is_training:
-                df_processed[numerical_features] = self.scaler.fit_transform(df_processed[numerical_features])
-            else:
-                df_processed[numerical_features] = self.scaler.transform(df_processed[numerical_features])
+            if len(numerical_features) > 0:
+                if is_training:
+                    df_processed[numerical_features] = self.scaler.fit_transform(df_processed[numerical_features])
+                else:
+                    df_processed[numerical_features] = self.scaler.transform(df_processed[numerical_features])
             
-            logger.info("Feature preprocessing completed successfully")
+            logger.info(f"Feature preprocessing completed successfully")
+            logger.info(f"Categorical features processed: {categorical_features}")
+            logger.info(f"Numerical features processed: {numerical_features}")
             return df_processed
             
         except Exception as e:

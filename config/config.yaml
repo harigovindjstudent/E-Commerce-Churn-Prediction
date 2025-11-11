@@ -1,14 +1,16 @@
 data:
-  raw_data_path: 'data/Churn_Modelling.csv'
-  processed_data_path: 'data/processed/processed_data.csv'
+  raw_data_path: '../data/Churn_Modelling.csv'
+  processed_data_path: '../data/processed/processed_data.csv'
   test_size: 0.2
   random_state: 42
 
 feature_engineering:
-  categorical_features:
+  # Note: Preprocessing now automatically detects categorical and numerical features
+  # Lists below are for reference/documentation only
+  original_categorical_features:
     - 'Geography'
     - 'Gender'
-  numerical_features:
+  original_numerical_features:
     - 'CreditScore'
     - 'Age'
     - 'Tenure'
